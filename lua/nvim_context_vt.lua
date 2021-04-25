@@ -1,6 +1,14 @@
 -- This is a pretty simple function that gets the context and up the
 -- tree for the current position.
-
+local nodetypes = {
+    ["function"] = 1,
+    function_defintion = 1,
+    local_function = 1,
+    method_declaration = 1,
+    if_statement = 1,
+    foreach_statement = 1,
+    class_declaration = 1
+}
 function _G.showContext(node)
     local ts_utils = require 'nvim-treesitter.ts_utils';
 
@@ -24,7 +32,7 @@ function _G.showContext(node)
     local type = parentNode:type()
 
     -- Todo: something like array.contains
-    if type == 'function' or type == 'method_declaration' or type == 'if_statement' or type == 'foreach_statement' or type == 'class_declaration' then
+    if nodetypes[type] ~= nil then
         local targetLineNumber = parentNode:end_();
 
         local parentNodeText = ts_utils.get_node_text(parentNode, 0);
