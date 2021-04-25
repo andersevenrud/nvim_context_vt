@@ -1,13 +1,19 @@
 -- This is a pretty simple function that gets the context and up the
 -- tree for the current position.
-local nodetypes = {
-    "function",
-    "function_defintion",
-    "local_function",
-    "method_declaration",
-    "if_statement",
-    "foreach_statement",
-    "class_declaration"
+local targets = {
+    'function',
+    'method_declaration',
+    'function_declaration',
+
+    'if_statement',
+    'if_expression',
+
+    'class_declaration',
+
+    'while_expression',
+
+    'for_expression',
+    'foreach_statement',
 }
 local M = {}
 function M.showContext(node)
@@ -32,7 +38,7 @@ function M.showContext(node)
 
     local type = parentNode:type()
 
-    if vim.tbl_contains(nodetypes, type) then
+    if vim.tbl_contains(targets, type) then
         local targetLineNumber = parentNode:end_();
 
         local parentNodeText = ts_utils.get_node_text(parentNode, 0);
