@@ -20,14 +20,14 @@ function M.showContext(node)
     local ts_utils = require 'nvim-treesitter.ts_utils';
 
     if node == nil then
-	-- Clear the existing.
-	vim.api.nvim_buf_clear_namespace(0, vim.g.context_vt_namespace, 0, -1);
-	-- Get the node at the current position.
+        -- Clear the existing.
+        vim.api.nvim_buf_clear_namespace(0, vim.g.context_vt_namespace, 0, -1);
+        -- Get the node at the current position.
         node = ts_utils.get_node_at_cursor();
     end
 
     if  not node then
-	return
+        return
     end
 
     local parentNode = node:parent();
