@@ -15,6 +15,15 @@ local targets = {
 
     'for_expression',
     'foreach_statement',
+
+    -- ruby target
+    'class',
+    'module',
+    'method',
+    'do_block',
+    'if',
+    'while',
+    'for'
 }
 
 function _G.showContext(node)
