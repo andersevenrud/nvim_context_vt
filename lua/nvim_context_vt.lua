@@ -7,7 +7,7 @@ local targets = {
     'function',
     'method_declaration',
     'function_declaration',
-    'function_defintion',
+    'function_definition',
     'local_function',
 
     'if_statement',
