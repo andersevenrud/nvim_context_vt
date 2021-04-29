@@ -16,9 +16,12 @@ local targets = {
     'class_declaration',
 
     'while_expression',
+    'while_statement',
 
     'for_expression',
     'foreach_statement',
+    'for_statement',
+    'for_in_statement',
 
     -- ruby target
     'class',
@@ -41,6 +44,7 @@ local function setVirtualText(node)
     end
 
 end
+
 function M.showContext(node)
     if node == nil then
         -- Clear the existing.
