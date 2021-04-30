@@ -23,6 +23,15 @@ local targets = {
     'for_statement',
     'for_in_statement',
 
+    -- rust
+    'match_expression',
+    'if_let_expression',
+    'tuple_struct_pattern',
+    'while_let_expression',
+    'for_expression',
+    'function_item',
+    'struct_item',
+
     -- ruby target
     'class',
     'module',
@@ -43,6 +52,14 @@ local function setVirtualText(node)
         vim.api.nvim_buf_set_virtual_text(0, vim.g.context_vt_namespace, targetLineNumber, {{ "--> " .. nodeText[1], 'Comment' }}, {});
     end
 
+end
+
+function M.showDebug()
+    node = ts_utils.get_node_at_cursor();
+    print("current type")
+    print(node:type());
+    print("parent type")
+    print(node:parent():type());
 end
 
 function M.showContext(node)
