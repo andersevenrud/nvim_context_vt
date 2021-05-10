@@ -13,7 +13,12 @@ local targets = {
     'if_statement',
     'if_expression',
 
+    'switch_expression',
+
     'class_declaration',
+    'struct_expression',
+
+    'test_expression',
 
     'while_expression',
     'while_statement',
