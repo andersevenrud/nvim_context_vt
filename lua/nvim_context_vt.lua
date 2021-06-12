@@ -9,6 +9,8 @@ local targets = {
     'function_declaration',
     'function_definition',
     'local_function',
+    'arrow_function',
+    'method_definition',
 
     'if_statement',
     'if_expression',
