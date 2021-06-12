@@ -47,6 +47,8 @@ local targets = {
     'for'
 }
 local M = {}
+local timer = vim.loop.new_timer()
+local debounce_time = 100
 
 local function setVirtualText(node)
     if vim.tbl_contains(targets, node:type()) then
@@ -90,6 +92,18 @@ function M.showContext(node)
     if parentNode and not (parentNode:type() == 'program') then
         M.showContext(parentNode);
     end
+end
+
+function M.onCursorMoved()
+    timer:start(
+        debounce_time,
+        0,
+        vim.schedule_wrap(
+            function()
+                M.showContext()
+            end
+        )
+    )
 end
 
 return M
