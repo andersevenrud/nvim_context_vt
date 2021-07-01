@@ -3,6 +3,8 @@
 
 local ts_utils = require 'nvim-treesitter.ts_utils';
 
+local opts = {}
+
 local targets = {
     'function',
     'method_declaration',
@@ -48,13 +50,28 @@ local targets = {
 }
 local M = {}
 
+function M.setup(user_opts)
+	opts = vim.tbl_extend('force', opts, user_opts or {})
+end
+
 local function setVirtualText(node)
     if vim.tbl_contains(targets, node:type()) then
         local targetLineNumber = node:end_();
 
-        local nodeText = ts_utils.get_node_text(node, 0);
+		local virtualText
 
-        vim.api.nvim_buf_set_virtual_text(0, vim.g.context_vt_namespace, targetLineNumber, {{ "--> " .. nodeText[1], 'Comment' }}, {});
+		if opts.custom_text_handler then
+			virtualText = opts.custom_text_handler(node)
+		else
+			virtualText = "--> " .. ts_utils.get_node_text(node, 0)[1];
+		end
+
+		-- Add a guard here to allow users to filter which node to show virtual text
+		if not virtualText then
+			return
+		end
+
+        vim.api.nvim_buf_set_virtual_text(0, vim.g.context_vt_namespace, targetLineNumber, {{ virtualText, 'Comment' }}, {});
     end
 
 end
