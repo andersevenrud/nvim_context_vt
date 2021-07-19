@@ -52,8 +52,8 @@ local targets = {
     'for',
 
 	-- typescript
-	'object_type',
-	'enum_body',
+	'interface_declaration',
+	'enum_declaration',
 }
 local M = {}
 
