@@ -13,6 +13,7 @@ local targets = {
     'local_function',
     'arrow_function',
     'method_definition',
+	'arguments',
 
     'if_statement',
     'if_expression',
@@ -48,7 +49,11 @@ local targets = {
     'do_block',
     'if',
     'while',
-    'for'
+    'for',
+
+	-- typescript
+	'object_type',
+	'enum_body',
 }
 local M = {}
 
