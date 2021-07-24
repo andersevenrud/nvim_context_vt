@@ -13,7 +13,7 @@ local targets = {
     'local_function',
     'arrow_function',
     'method_definition',
-	'arguments',
+    'arguments',
 
     'if_statement',
     'if_expression',
@@ -51,9 +51,9 @@ local targets = {
     'while',
     'for',
 
-	-- typescript
-	'interface_declaration',
-	'enum_declaration',
+    -- typescript
+    'interface_declaration',
+    'enum_declaration',
 }
 local M = {}
 
