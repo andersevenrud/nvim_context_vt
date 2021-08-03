@@ -16,7 +16,7 @@ If a context expected is not shown you can try to use
 
 ## Mandatory jif
 
-![example](static/jif.gif)
+![example](https://user-images.githubusercontent.com/866743/128077347-051430c4-2c89-4161-aa48-5a5793ec8499.gif)
 
 ## How to install
 
