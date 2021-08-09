@@ -39,6 +39,7 @@ local targets = {
     'tuple_struct_pattern',
     'while_let_expression',
     'for_expression',
+    'loop_expression',
     'function_item',
     'struct_item',
 
