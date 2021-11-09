@@ -55,6 +55,21 @@ local targets = {
     -- typescript
     'interface_declaration',
     'enum_declaration',
+    -- lua,
+    'local_variable_declaration',
+    -- go
+    'type_declaration',
+    'type_spec',
+    'short_var_declaration',
+    'defer_statement',
+    'expression_switch_statement',
+    'composite_literal',
+    'element',
+    'func_literal',
+    'go_statement',
+    'select_statement',
+    'communication_case',
+    'default_case',
 }
 local M = {}
 
@@ -65,6 +80,10 @@ end
 local function setVirtualText(node)
     if vim.tbl_contains(targets, node:type()) then
         local targetLineNumber = node:end_();
+        -- default min_rows == 1, meaning needs at least one other line
+        -- (total 2 lines) to trigger context show.
+        local min_rows = opts.min_rows or 1;
+        if targetLineNumber < node:start() + min_rows then return end
 
 		local virtualText
 
