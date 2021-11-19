@@ -47,3 +47,12 @@ require('nvim_context_vt').setup {
   end,
 }
 ```
+
+You can set your own highlight for virtual texts.
+
+```lua
+vim.cmd[[hi ContextVt guifg=#365f86]]
+require'nvim_context_vt'.setup{
+  highlight = 'ContextVt',
+}
+```
