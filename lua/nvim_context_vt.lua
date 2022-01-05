@@ -77,13 +77,19 @@ function M.setup(user_opts)
 	opts = vim.tbl_extend('force', opts, user_opts or {})
 end
 
-local function setVirtualText(node)
+local function setVirtualText(node, usedLineNumbers)
     if vim.tbl_contains(targets, node:type()) then
         local targetLineNumber = node:end_();
         -- default min_rows == 1, meaning needs at least one other line
         -- (total 2 lines) to trigger context show.
         local min_rows = opts.min_rows or 1;
         if targetLineNumber < node:start() + min_rows then return end
+
+        if usedLineNumbers[targetLineNumber] == nil then
+            usedLineNumbers[targetLineNumber] = true
+        else
+            return
+        end
 
 		local virtualText
 
@@ -113,7 +119,9 @@ function M.showDebug()
     print(node:parent():type());
 end
 
-function M.showContext(node)
+function M.showContext(node, lastUsedLineNumbers)
+    local usedLineNumbers = lastUsedLineNumbers or {}
+
     if node == nil then
         -- Clear the existing.
         vim.api.nvim_buf_clear_namespace(0, vim.g.context_vt_namespace, 0, -1);
@@ -127,14 +135,14 @@ function M.showContext(node)
 
     local parentNode = node:parent();
 
-    setVirtualText(node)
+    setVirtualText(node, usedLineNumbers)
     if not parentNode then
         return
     end
-    setVirtualText(parentNode)
+    setVirtualText(parentNode, usedLineNumbers)
 
     if parentNode and not (parentNode:type() == 'program') then
-        M.showContext(parentNode);
+        M.showContext(parentNode, usedLineNumbers);
     end
 end
 
