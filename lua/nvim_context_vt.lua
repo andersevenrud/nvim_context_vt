@@ -15,6 +15,10 @@ local targets = {
     'method_definition',
     'arguments',
 
+    'try_statement',
+    'catch_clause',
+    'finally_clause',
+
     'if_statement',
     'if_expression',
 
