@@ -70,6 +70,8 @@ local targets = {
     'select_statement',
     'communication_case',
     'default_case',
+    -- cpp
+    'for_range_loop',
 }
 local M = {}
 
