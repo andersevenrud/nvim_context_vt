@@ -2,8 +2,11 @@
 -- tree for the current position.
 
 local ts_utils = require 'nvim-treesitter.ts_utils';
+local parsers = require'nvim-treesitter.parsers'
 
-local opts = {}
+local opts = {
+    disable_ft = {}
+}
 
 local targets = {
     'function',
@@ -120,6 +123,11 @@ function M.showDebug()
 end
 
 function M.showContext(node, lastUsedLineNumbers)
+    local parser_lang = parsers.get_buf_lang()
+    if vim.tbl_contains(opts.disable_ft, parser_lang) then
+        return
+    end
+
     local usedLineNumbers = lastUsedLineNumbers or {}
 
     if node == nil then
