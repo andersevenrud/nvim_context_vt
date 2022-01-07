@@ -71,6 +71,7 @@ local targets = {
     'communication_case',
     'default_case',
     -- cpp
+    'case_statement',
     'for_range_loop',
 }
 local M = {}
