@@ -50,9 +50,16 @@ require('nvim_context_vt').setup {
 
 You can set your own highlight for virtual texts.
 
+```vim
+highlight ContextVt guifg=#365f86
+```
+
 ```lua
+-- override internal highlight
 vim.cmd[[hi ContextVt guifg=#365f86]]
+
+-- or use a custom highlight name
 require'nvim_context_vt'.setup{
-  highlight = 'ContextVt',
+  highlight = 'CustomContextVt',
 }
 ```
