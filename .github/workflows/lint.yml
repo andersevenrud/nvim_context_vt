@@ -1,0 +1,21 @@
+name: Lint tests
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  lint:
+    name: Lint and style check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: JohnnyMorganz/stylua-action@1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --check .
+      - uses: Jayrgo/luacheck-action@v1
+        with:
+          files: '.'

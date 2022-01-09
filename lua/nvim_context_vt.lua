@@ -1,11 +1,8 @@
--- This is a pretty simple function that gets the context and up the
--- tree for the current position.
-
-local ts_utils = require 'nvim-treesitter.ts_utils';
-local parsers = require'nvim-treesitter.parsers'
+local ts_utils = require('nvim-treesitter.ts_utils')
+local parsers = require('nvim-treesitter.parsers')
 
 local opts = {
-    disable_ft = {}
+    disable_ft = {},
 }
 
 local targets = {
@@ -62,8 +59,10 @@ local targets = {
     -- typescript
     'interface_declaration',
     'enum_declaration',
+
     -- lua,
     'local_variable_declaration',
+
     -- go
     'type_declaration',
     'type_spec',
@@ -77,6 +76,7 @@ local targets = {
     'select_statement',
     'communication_case',
     'default_case',
+
     -- cpp
     'case_statement',
     'for_range_loop',
@@ -84,16 +84,19 @@ local targets = {
 local M = {}
 
 function M.setup(user_opts)
-	opts = vim.tbl_extend('force', opts, user_opts or {})
+    opts = vim.tbl_extend('force', opts, user_opts or {})
 end
 
 local function setVirtualText(node, usedLineNumbers)
     if vim.tbl_contains(targets, node:type()) then
-        local targetLineNumber = node:end_();
+        local targetLineNumber = node:end_()
+
         -- default min_rows == 1, meaning needs at least one other line
         -- (total 2 lines) to trigger context show.
-        local min_rows = opts.min_rows or 1;
-        if targetLineNumber < node:start() + min_rows then return end
+        local min_rows = opts.min_rows or 1
+        if targetLineNumber < node:start() + min_rows then
+            return
+        end
 
         if usedLineNumbers[targetLineNumber] == nil then
             usedLineNumbers[targetLineNumber] = true
@@ -101,34 +104,35 @@ local function setVirtualText(node, usedLineNumbers)
             return
         end
 
-		local virtualText
+        local virtualText
 
-		if opts.custom_text_handler then
-			virtualText = opts.custom_text_handler(node)
-		else
-			virtualText = "--> " .. ts_utils.get_node_text(node, 0)[1];
-		end
+        if opts.custom_text_handler then
+            virtualText = opts.custom_text_handler(node)
+        else
+            virtualText = '--> ' .. ts_utils.get_node_text(node, 0)[1]
+        end
 
-		-- Add a guard here to allow users to filter which node to show virtual text
-		if not virtualText then
-			return
-		end
+        -- Add a guard here to allow users to filter which node to show virtual text
+        if not virtualText then
+            return
+        end
 
         vim.api.nvim_buf_set_extmark(0, vim.g.context_vt_namespace, targetLineNumber, 0, {
-            virt_text = {{virtualText, opts.highlight or 'ContextVt'}},
+            virt_text = { { virtualText, opts.highlight or 'ContextVt' } },
         })
     end
-
 end
 
 function M.showDebug()
-    node = ts_utils.get_node_at_cursor();
-    print("current type")
-    print(node:type());
-    print("parent type")
-    print(node:parent():type());
+    local node = ts_utils.get_node_at_cursor()
+    print('current type')
+    print(node:type())
+    print('parent type')
+    print(node:parent():type())
 end
 
+-- This is a pretty simple function that gets the context and up the
+-- tree for the current position.
 function M.showContext(node, lastUsedLineNumbers)
     local parser_lang = parsers.get_buf_lang()
     if vim.tbl_contains(opts.disable_ft, parser_lang) then
@@ -138,17 +142,15 @@ function M.showContext(node, lastUsedLineNumbers)
     local usedLineNumbers = lastUsedLineNumbers or {}
 
     if node == nil then
-        -- Clear the existing.
-        vim.api.nvim_buf_clear_namespace(0, vim.g.context_vt_namespace, 0, -1);
-        -- Get the node at the current position.
-        node = ts_utils.get_node_at_cursor();
+        vim.api.nvim_buf_clear_namespace(0, vim.g.context_vt_namespace, 0, -1)
+        node = ts_utils.get_node_at_cursor()
     end
 
-    if  not node then
+    if not node then
         return
     end
 
-    local parentNode = node:parent();
+    local parentNode = node:parent()
 
     setVirtualText(node, usedLineNumbers)
     if not parentNode then
@@ -157,7 +159,7 @@ function M.showContext(node, lastUsedLineNumbers)
     setVirtualText(parentNode, usedLineNumbers)
 
     if parentNode and not (parentNode:type() == 'program') then
-        M.showContext(parentNode, usedLineNumbers);
+        M.showContext(parentNode, usedLineNumbers)
     end
 end
 
