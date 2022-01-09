@@ -115,7 +115,7 @@ local function setVirtualText(node, usedLineNumbers)
 		end
 
         vim.api.nvim_buf_set_extmark(0, vim.g.context_vt_namespace, targetLineNumber, 0, {
-            virt_text = {{virtualText, opts.highlight or 'Comment'}},
+            virt_text = {{virtualText, opts.highlight or 'ContextVt'}},
         })
     end
 
