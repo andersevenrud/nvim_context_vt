@@ -24,8 +24,8 @@ require('nvim_context_vt').setup({
   disable_ft = { 'typescript' },
 
   -- Callback to override the generated virtual text.
-  -- You can also use this to filter out node types which you don't to display.
-  custom_text_handler = function(node)
+  -- You can also use this to filter out node types.
+  custom_text_handler = function(node, ts_utils)
     -- If you return `nil`, no virtual text will be displayed.
     if node:type() == 'function' then
       return nil

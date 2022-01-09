@@ -107,7 +107,7 @@ local function setVirtualText(node, usedLineNumbers)
         local virtualText
 
         if opts.custom_text_handler then
-            virtualText = opts.custom_text_handler(node)
+            virtualText = opts.custom_text_handler(node, ts_utils)
         else
             virtualText = '--> ' .. ts_utils.get_node_text(node, 0)[1]
         end
