@@ -56,3 +56,11 @@ require'nvim_context_vt'.setup{
   highlight = 'ContextVt',
 }
 ```
+
+Or disable the virtual text for any given filetype:
+
+```lua
+require('nvim_context_vt').setup {
+  disable_ft = { 'typescript' }
+}
+```
