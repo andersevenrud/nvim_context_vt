@@ -1,7 +1,11 @@
 local ts_utils = require('nvim-treesitter.ts_utils')
 local parsers = require('nvim-treesitter.parsers')
+local ns = vim.api.nvim_create_namespace('context_vt')
 
 local opts = {
+    min_rows = 1,
+    custom_text_handler = nil,
+    highlight = 'ContextVt',
     disable_ft = {},
 }
 
@@ -42,7 +46,6 @@ local targets = {
     'if_let_expression',
     'tuple_struct_pattern',
     'while_let_expression',
-    'for_expression',
     'loop_expression',
     'function_item',
     'struct_item',
@@ -81,6 +84,7 @@ local targets = {
     'case_statement',
     'for_range_loop',
 }
+
 local M = {}
 
 function M.setup(user_opts)
@@ -93,8 +97,7 @@ local function setVirtualText(node, usedLineNumbers)
 
         -- default min_rows == 1, meaning needs at least one other line
         -- (total 2 lines) to trigger context show.
-        local min_rows = opts.min_rows or 1
-        if targetLineNumber < node:start() + min_rows then
+        if targetLineNumber < node:start() + opts.min_rows then
             return
         end
 
@@ -106,29 +109,23 @@ local function setVirtualText(node, usedLineNumbers)
 
         local virtualText
 
-        if opts.custom_text_handler then
+        if type(opts.custom_text_handler) == 'function' then
             virtualText = opts.custom_text_handler(node, ts_utils)
         else
             virtualText = '--> ' .. ts_utils.get_node_text(node, 0)[1]
         end
 
-        -- Add a guard here to allow users to filter which node to show virtual text
-        if not virtualText then
-            return
+        if virtualText then
+            vim.api.nvim_buf_set_extmark(0, ns, targetLineNumber, 0, {
+                virt_text = { { virtualText, opts.highlight } },
+            })
         end
-
-        vim.api.nvim_buf_set_extmark(0, vim.g.context_vt_namespace, targetLineNumber, 0, {
-            virt_text = { { virtualText, opts.highlight or 'ContextVt' } },
-        })
     end
 end
 
 function M.showDebug()
     local node = ts_utils.get_node_at_cursor()
-    print('current type')
-    print(node:type())
-    print('parent type')
-    print(node:parent():type())
+    print(vim.inspect({ current = node:type(), parent = node:parent():type() }))
 end
 
 -- This is a pretty simple function that gets the context and up the
@@ -142,7 +139,7 @@ function M.showContext(node, lastUsedLineNumbers)
     local usedLineNumbers = lastUsedLineNumbers or {}
 
     if node == nil then
-        vim.api.nvim_buf_clear_namespace(0, vim.g.context_vt_namespace, 0, -1)
+        vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
         node = ts_utils.get_node_at_cursor()
     end
 
@@ -150,16 +147,15 @@ function M.showContext(node, lastUsedLineNumbers)
         return
     end
 
-    local parentNode = node:parent()
-
     setVirtualText(node, usedLineNumbers)
-    if not parentNode then
-        return
-    end
-    setVirtualText(parentNode, usedLineNumbers)
 
-    if parentNode and not (parentNode:type() == 'program') then
-        M.showContext(parentNode, usedLineNumbers)
+    local parentNode = node:parent()
+    if parentNode then
+        setVirtualText(parentNode, usedLineNumbers)
+
+        if not (parentNode:type() == 'program') then
+            M.showContext(parentNode, usedLineNumbers)
+        end
     end
 end
 
