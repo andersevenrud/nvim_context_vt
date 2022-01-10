@@ -131,14 +131,14 @@ end
 -- This is a pretty simple function that gets the context and up the
 -- tree for the current position.
 function M.showContext(node, lastUsedLineNumbers)
-    local parser_lang = parsers.get_buf_lang()
-    if vim.tbl_contains(opts.disable_ft, parser_lang) then
-        return
-    end
-
     local usedLineNumbers = lastUsedLineNumbers or {}
 
-    if node == nil then
+    if not node then
+        local parser_lang = parsers.get_buf_lang()
+        if vim.tbl_contains(opts.disable_ft, parser_lang) then
+            return
+        end
+
         vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
         node = ts_utils.get_node_at_cursor()
     end
@@ -150,12 +150,8 @@ function M.showContext(node, lastUsedLineNumbers)
     setVirtualText(node, usedLineNumbers)
 
     local parentNode = node:parent()
-    if parentNode then
-        setVirtualText(parentNode, usedLineNumbers)
-
-        if not (parentNode:type() == 'program') then
-            M.showContext(parentNode, usedLineNumbers)
-        end
+    if parentNode and parentNode:type() ~= 'program' then
+        M.showContext(parentNode, usedLineNumbers)
     end
 end
 
