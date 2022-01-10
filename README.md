@@ -43,7 +43,7 @@ require('nvim_context_vt').setup({
 
 ## Debug
 
-If a context expected is not shown you can try to use `:lua require 'nvim_context_vt'.showDebug()`
+If a context expected is not shown you can try to use `:lua require 'nvim_context_vt'.show_debug()`
 to get current and parent node info.
 
 ## License

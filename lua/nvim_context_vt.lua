@@ -1,5 +1,6 @@
 local ts_utils = require('nvim-treesitter.ts_utils')
 local parsers = require('nvim-treesitter.parsers')
+
 local ns = vim.api.nvim_create_namespace('context_vt')
 
 local opts = {
@@ -85,51 +86,52 @@ local targets = {
     'for_range_loop',
 }
 
+local function set_virtual_text(node, used_line_numbers)
+    if vim.tbl_contains(targets, node:type()) then
+        local target_line_number = node:end_()
+
+        if target_line_number < node:start() + opts.min_rows then
+            return
+        end
+
+        if used_line_numbers[target_line_number] == nil then
+            used_line_numbers[target_line_number] = true
+        else
+            return
+        end
+
+        local virtual_text
+
+        if type(opts.custom_text_handler) == 'function' then
+            virtual_text = opts.custom_text_handler(node, ts_utils)
+        else
+            virtual_text = '--> ' .. ts_utils.get_node_text(node, 0)[1]
+        end
+
+        if virtual_text then
+            vim.api.nvim_buf_set_extmark(0, ns, target_line_number, 0, {
+                virt_text = { { virtual_text, opts.highlight } },
+            })
+        end
+    end
+end
+
 local M = {}
 
 function M.setup(user_opts)
     opts = vim.tbl_extend('force', opts, user_opts or {})
 end
 
-local function setVirtualText(node, usedLineNumbers)
-    if vim.tbl_contains(targets, node:type()) then
-        local targetLineNumber = node:end_()
-
-        if targetLineNumber < node:start() + opts.min_rows then
-            return
-        end
-
-        if usedLineNumbers[targetLineNumber] == nil then
-            usedLineNumbers[targetLineNumber] = true
-        else
-            return
-        end
-
-        local virtualText
-
-        if type(opts.custom_text_handler) == 'function' then
-            virtualText = opts.custom_text_handler(node, ts_utils)
-        else
-            virtualText = '--> ' .. ts_utils.get_node_text(node, 0)[1]
-        end
-
-        if virtualText then
-            vim.api.nvim_buf_set_extmark(0, ns, targetLineNumber, 0, {
-                virt_text = { { virtualText, opts.highlight } },
-            })
-        end
-    end
-end
-
-function M.showDebug()
+function M.show_debug()
     local node = ts_utils.get_node_at_cursor()
-    print(vim.inspect({ current = node:type(), parent = node:parent():type() }))
+    print(vim.inspect({
+        current = node:type(),
+        parent = node:parent():type(),
+    }))
 end
 
--- This is a pretty simple function that gets the context and up the
--- tree for the current position.
-function M.showContext(node, lastUsedLineNumbers)
-    local usedLineNumbers = lastUsedLineNumbers or {}
+function M.show_context(node, last_used_line_numbers)
+    local used_line_numbers = last_used_line_numbers or {}
 
     if not node then
         local parser_lang = parsers.get_buf_lang()
@@ -141,15 +143,13 @@ function M.showContext(node, lastUsedLineNumbers)
         node = ts_utils.get_node_at_cursor()
     end
 
-    if not node then
-        return
-    end
+    if node then
+        set_virtual_text(node, used_line_numbers)
 
-    setVirtualText(node, usedLineNumbers)
-
-    local parentNode = node:parent()
-    if parentNode and parentNode:type() ~= 'program' then
-        M.showContext(parentNode, usedLineNumbers)
+        local parent_node = node:parent()
+        if parent_node and parent_node:type() ~= 'program' then
+            M.show_context(parent_node, used_line_numbers)
+        end
     end
 end
 
