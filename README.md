@@ -23,6 +23,10 @@ require('nvim_context_vt').setup({
   -- Default is an empty table
   disable_ft = { 'typescript' },
 
+  -- How many lines required after starting position to show virtual text
+  -- Default is 1 (equals two lines total)
+  min_rows = 1,
+
   -- Callback to override the generated virtual text.
   -- You can also use this to filter out node types.
   custom_text_handler = function(node, ts_utils)
