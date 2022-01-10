@@ -95,8 +95,6 @@ local function setVirtualText(node, usedLineNumbers)
     if vim.tbl_contains(targets, node:type()) then
         local targetLineNumber = node:end_()
 
-        -- default min_rows == 1, meaning needs at least one other line
-        -- (total 2 lines) to trigger context show.
         if targetLineNumber < node:start() + opts.min_rows then
             return
         end
