@@ -51,6 +51,7 @@ local targets = {
     'loop_expression',
     'function_item',
     'struct_item',
+    'unsafe_block',
 
     -- ruby target
     'class',
