@@ -15,6 +15,10 @@ To customize the behavior use the setup function:
 
 ```lua
 require('nvim_context_vt').setup({
+  -- Override default virtual text prefix
+  -- Default is '-->'
+  prefix = '',
+
   -- Override the internal highlight group name
   -- Default is 'ContextVt'
   highlight = 'CustomContextVt',
