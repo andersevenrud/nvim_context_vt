@@ -8,6 +8,7 @@ local opts = {
     custom_text_handler = nil,
     highlight = 'ContextVt',
     disable_ft = {},
+    prefix = '-->',
 }
 
 local targets = {
@@ -95,7 +96,7 @@ local ignore_root_targets = {
 }
 
 local function default_text_handler(node)
-    return '--> ' .. ts_utils.get_node_text(node, 0)[1]
+    return opts.prefix .. ' ' .. ts_utils.get_node_text(node, 0)[1]
 end
 
 local function default_validator(node)
