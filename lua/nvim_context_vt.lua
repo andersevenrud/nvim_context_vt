@@ -15,6 +15,7 @@ local targets = {
     'method_declaration',
     'function_declaration',
     'function_definition',
+    'lexical_declaration',
     'local_function',
     'arrow_function',
     'method_definition',
