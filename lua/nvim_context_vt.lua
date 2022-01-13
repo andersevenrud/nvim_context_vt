@@ -68,6 +68,7 @@ local targets = {
 
     -- lua,
     'local_variable_declaration',
+    'variable_declaration',
 
     -- go
     'type_declaration',
