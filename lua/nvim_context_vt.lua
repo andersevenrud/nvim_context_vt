@@ -89,34 +89,43 @@ local targets = {
     'for_range_loop',
 }
 
-local function set_virtual_text(node, used_line_numbers)
+local ignore_root_targets = {
+    'program',
+    'document',
+}
+
+local function default_text_handler(node)
+    return '--> ' .. ts_utils.get_node_text(node, 0)[1]
+end
+
+local function default_validator(node)
     if vim.tbl_contains(targets, node:type()) then
-        local target_line_number = node:end_()
-
-        if target_line_number < node:start() + opts.min_rows then
-            return
-        end
-
-        if used_line_numbers[target_line_number] == nil then
-            used_line_numbers[target_line_number] = true
-        else
-            return
-        end
-
-        local virtual_text
-
-        if type(opts.custom_text_handler) == 'function' then
-            virtual_text = opts.custom_text_handler(node, ts_utils)
-        else
-            virtual_text = '--> ' .. ts_utils.get_node_text(node, 0)[1]
-        end
-
-        if virtual_text then
-            vim.api.nvim_buf_set_extmark(0, ns, target_line_number, 0, {
-                virt_text = { { virtual_text, opts.highlight } },
-            })
-        end
+        return node:end_() > node:start() + opts.min_rows
     end
+    return false
+end
+
+local function default_resolver(nodes)
+    return nodes[#nodes]
+end
+
+local function find_virtual_text_nodes(validator, ft)
+    local result = {}
+    local node = ts_utils.get_node_at_cursor()
+
+    while node ~= nil and not vim.tbl_contains(ignore_root_targets, node:type()) do
+        if validator(node, ft) then
+            local target_line = node:end_()
+            if not result[target_line] then
+                result[target_line] = {}
+            end
+            table.insert(result[target_line], node)
+        end
+
+        node = node:parent()
+    end
+
+    return result
 end
 
 local M = {}
@@ -126,32 +135,45 @@ function M.setup(user_opts)
 end
 
 function M.show_debug()
-    local node = ts_utils.get_node_at_cursor()
-    print(vim.inspect({
-        current = node:type(),
-        parent = node:parent():type(),
-    }))
+    local ft = parsers.get_buf_lang()
+    local result = find_virtual_text_nodes(function()
+        return true
+    end, ft)
+
+    local values = vim.tbl_values(result)
+    local lines = vim.tbl_keys(result)
+
+    for index, nodes in ipairs(values) do
+        local prefix = string.rep('   ', #values - index)
+        local line = lines[index]
+
+        for _, node in ipairs(nodes) do
+            print(prefix .. line .. ':' .. node:type() .. ' ' .. default_text_handler(node))
+        end
+    end
 end
 
-function M.show_context(node, last_used_line_numbers)
-    local used_line_numbers = last_used_line_numbers or {}
-
-    if not node then
-        local parser_lang = parsers.get_buf_lang()
-        if vim.tbl_contains(opts.disable_ft, parser_lang) then
-            return
-        end
-
-        vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
-        node = ts_utils.get_node_at_cursor()
+function M.show_context()
+    local ft = parsers.get_buf_lang()
+    if vim.tbl_contains(opts.disable_ft, ft) then
+        return
     end
 
-    if node then
-        set_virtual_text(node, used_line_numbers)
+    vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
 
-        local parent_node = node:parent()
-        if parent_node and parent_node:type() ~= 'program' then
-            M.show_context(parent_node, used_line_numbers)
+    local validate = default_validator -- TODO: Expose to opts w/docs
+    local resolve = default_resolver -- TODO: Expose to opts w/docs
+    local parse = opts.custom_text_handler or default_text_handler
+    local result = find_virtual_text_nodes(validate, ft)
+
+    for line, nodes in pairs(result) do
+        local node = resolve(nodes, ft)
+        local vt = parse(node, ts_utils, ft)
+
+        if vt then
+            vim.api.nvim_buf_set_extmark(0, ns, line, 0, {
+                virt_text = { { vt, opts.highlight } },
+            })
         end
     end
 end
