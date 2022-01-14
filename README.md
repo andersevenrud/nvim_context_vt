@@ -47,8 +47,8 @@ require('nvim_context_vt').setup({
 
 ## Debug
 
-If a context expected is not shown you can try to use `:lua require 'nvim_context_vt'.show_debug()`
-to get current and parent node info.
+If you don't see the expected context vitual text, run `:lua require 'nvim_context_vt'.show_debug()`
+to print out the context tree. Use this information to open a pull-request or an issue to add support.
 
 ## License
 
