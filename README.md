@@ -33,6 +33,7 @@ require('nvim_context_vt').setup({
 
   -- Callback to override the generated virtual text.
   -- You can also use this to filter out node types.
+  -- Default is nil
   custom_text_handler = function(node, ts_utils, ft)
     -- If you return `nil`, no virtual text will be displayed.
     if node:type() == 'function' then
@@ -41,6 +42,22 @@ require('nvim_context_vt').setup({
 
     -- This is the standard text
     return '--> ' .. ts_utils.get_node_text(node)[1]
+  end,
+
+  -- Custom node validator callback
+  -- Default is nil
+  custom_validator = function(node, ft, targets)
+    -- By default a node is matched against min_rows and targets
+    -- to filter out nodes, but you can override this behaviour here
+    return true
+  end,
+
+
+  -- Custom node virtual text resolver callback
+  -- Default is nil
+  custom_resolver = function(nodes, ft)
+    -- By default the last node is used
+    return nodes[#nodes]
   end,
 })
 ```
