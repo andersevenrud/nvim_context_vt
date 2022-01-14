@@ -6,6 +6,8 @@ local ns = vim.api.nvim_create_namespace('context_vt')
 local opts = {
     min_rows = 1,
     custom_text_handler = nil,
+    custom_validator = nil,
+    custom_resolver = nil,
     highlight = 'ContextVt',
     disable_ft = {},
     prefix = '-->',
@@ -115,7 +117,7 @@ local function find_virtual_text_nodes(validator, ft)
     local node = ts_utils.get_node_at_cursor()
 
     while node ~= nil and not vim.tbl_contains(ignore_root_targets, node:type()) do
-        if validator(node, ft) then
+        if validator(node, ft, targets) then
             local target_line = node:end_()
             if not result[target_line] then
                 result[target_line] = {}
@@ -162,8 +164,8 @@ function M.show_context()
 
     vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
 
-    local validate = default_validator -- TODO: Expose to opts w/docs
-    local resolve = default_resolver -- TODO: Expose to opts w/docs
+    local validate = opts.custom_validator or default_validator
+    local resolve = opts.custom_resolver or default_resolver
     local parse = opts.custom_text_handler or default_text_handler
     local result = find_virtual_text_nodes(validate, ft)
 
