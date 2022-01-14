@@ -5,7 +5,7 @@ local ns = vim.api.nvim_create_namespace('context_vt')
 
 local opts = {
     min_rows = 1,
-    custom_text_handler = nil,
+    custom_parser = nil,
     custom_validator = nil,
     custom_resolver = nil,
     highlight = 'ContextVt',
@@ -97,7 +97,7 @@ local ignore_root_targets = {
     'document',
 }
 
-local function default_text_handler(node)
+local function default_parser(node)
     return opts.prefix .. ' ' .. ts_utils.get_node_text(node, 0)[1]
 end
 
@@ -151,7 +151,7 @@ function M.show_debug()
         local line = lines[index]
 
         for _, node in ipairs(nodes) do
-            print(prefix .. line .. ':' .. node:type() .. ' ' .. default_text_handler(node))
+            print(prefix .. line .. ':' .. node:type() .. ' ' .. default_parser(node))
         end
     end
 end
@@ -166,12 +166,12 @@ function M.show_context()
 
     local validate = opts.custom_validator or default_validator
     local resolve = opts.custom_resolver or default_resolver
-    local parse = opts.custom_text_handler or default_text_handler
+    local parse = opts.custom_parser or default_parser
     local result = find_virtual_text_nodes(validate, ft)
 
     for line, nodes in pairs(result) do
         local node = resolve(nodes, ft)
-        local vt = parse(node, ts_utils, ft)
+        local vt = parse(node, ft, ts_utils)
 
         if vt then
             vim.api.nvim_buf_set_extmark(0, ns, line, 0, {

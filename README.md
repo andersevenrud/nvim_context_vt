@@ -31,10 +31,9 @@ require('nvim_context_vt').setup({
   -- Default: 1 (equals two lines total)
   min_rows = 1,
 
-  -- Callback to override the generated virtual text.
-  -- You can also use this to filter out node types.
+  -- Custom virtual text node parser callback
   -- Default: nil
-  custom_text_handler = function(node, ts_utils, ft)
+  custom_parser = function(node, ft, ts_utils)
     -- If you return `nil`, no virtual text will be displayed.
     if node:type() == 'function' then
       return nil
