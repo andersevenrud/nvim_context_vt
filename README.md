@@ -16,24 +16,24 @@ To customize the behavior use the setup function:
 ```lua
 require('nvim_context_vt').setup({
   -- Override default virtual text prefix
-  -- Default is '-->'
+  -- Default: '-->'
   prefix = '',
 
   -- Override the internal highlight group name
-  -- Default is 'ContextVt'
+  -- Default: 'ContextVt'
   highlight = 'CustomContextVt',
 
   -- Disable virtual text for given filetypes
-  -- Default is an empty table
-  disable_ft = { 'typescript' },
+  -- Default: {}
+  disable_ft = { 'markdown' },
 
   -- How many lines required after starting position to show virtual text
-  -- Default is 1 (equals two lines total)
+  -- Default: 1 (equals two lines total)
   min_rows = 1,
 
   -- Callback to override the generated virtual text.
   -- You can also use this to filter out node types.
-  -- Default is nil
+  -- Default: nil
   custom_text_handler = function(node, ts_utils, ft)
     -- If you return `nil`, no virtual text will be displayed.
     if node:type() == 'function' then
@@ -45,7 +45,7 @@ require('nvim_context_vt').setup({
   end,
 
   -- Custom node validator callback
-  -- Default is nil
+  -- Default: nil
   custom_validator = function(node, ft, targets)
     -- By default a node is matched against min_rows and targets
     -- to filter out nodes, but you can override this behaviour here
@@ -54,7 +54,7 @@ require('nvim_context_vt').setup({
 
 
   -- Custom node virtual text resolver callback
-  -- Default is nil
+  -- Default: nil
   custom_resolver = function(nodes, ft)
     -- By default the last node is used
     return nodes[#nodes]
