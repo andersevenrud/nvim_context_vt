@@ -1,0 +1,87 @@
+*nvim_context_vt*
+
+Shows virtual text of the current context after functions, methods, statements, etc.
+
+================================================================================
+CONTENTS                                                *nvim_context_vt-contents*
+
+1. nvim_context_vt...............................................|nvim_context_vt|
+    1.1. How to install..................................|nvim_context_vt-install|
+    1.2. Advanced usage.................................|nvim_context_vt-advanced|
+    1.3. Debug.............................................|nvim_context_vt-debug|
+    1.4. License.........................................|nvim_context_vt-license|
+
+--------------------------------------------------------------------------------
+HOW TO INSTALL                                           *nvim_context_vt-install*
+
+Use your favourite package manager and install treesitter (https://github.com/nvim-treesitter/nvim-treesitter)
+alongside this plugin. No configuration is required out of the box.
+
+--------------------------------------------------------------------------------
+ADVANCED USAGE                                          *nvim_context_vt-advanced*
+
+To customize the behavior use the setup function:
+>
+    require('nvim_context_vt').setup({
+      -- Override default virtual text prefix
+      -- Default: '-->'
+      prefix = '',
+
+      -- Override the internal highlight group name
+      -- Default: 'ContextVt'
+      highlight = 'CustomContextVt',
+
+      -- Disable virtual text for given filetypes
+      -- Default: {}
+      disable_ft = { 'markdown' },
+
+      -- How many lines required after starting position to show virtual text
+      -- Default: 1 (equals two lines total)
+      min_rows = 1,
+
+      -- Custom virtual text node parser callback
+      -- Default: nil
+      custom_parser = function(node, ft, ts_utils)
+        -- If you return `nil`, no virtual text will be displayed.
+        if node:type() == 'function' then
+          return nil
+        end
+        -- This is the standard text
+        return '--> ' .. ts_utils.get_node_text(node)[1]
+      end,
+
+      -- Custom node validator callback
+      -- Default: nil
+      custom_validator = function(node, ft)
+        -- Internally a node is matched against min_rows and configured targets
+        local default_validator = require('nvim_context_vt').default_validator
+        if default_validator(node, ft) then
+          -- Custom behaviour after using the internal validator
+          if node:type() == 'function' then
+            return false
+          end
+        end
+        return false
+      end,
+
+      -- Custom node virtual text resolver callback
+      -- Default: nil
+      custom_resolver = function(nodes, ft)
+        -- By default the last node is used
+        return nodes[#nodes]
+      end,
+    })
+<
+
+--------------------------------------------------------------------------------
+DEBUG                                                      *nvim_context_vt-debug*
+
+If you don't see the expected context vitual text, run `:lua require 'nvim_context_vt'.show_debug()`
+to print out the context tree. Use this information to open a pull-request or an issue to add support.
+
+--------------------------------------------------------------------------------
+LICENSE                                                  *nvim_context_vt-license*
+
+MIT
+
+vim:tw=78:ts=4:et:ft=help:norl:
