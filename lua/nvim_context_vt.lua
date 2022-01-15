@@ -117,7 +117,7 @@ local function find_virtual_text_nodes(validator, ft)
     local node = ts_utils.get_node_at_cursor()
 
     while node ~= nil and not vim.tbl_contains(ignore_root_targets, node:type()) do
-        if validator(node, ft, targets) then
+        if validator(node, ft) then
             local target_line = node:end_()
             if not result[target_line] then
                 result[target_line] = {}
@@ -131,7 +131,13 @@ local function find_virtual_text_nodes(validator, ft)
     return result
 end
 
-local M = {}
+local M = {
+    targets = targets,
+    ignore_root_targets = ignore_root_targets,
+    default_parser = default_parser,
+    default_validator = default_validator,
+    default_resolver = default_resolver,
+}
 
 function M.setup(user_opts)
     opts = vim.tbl_extend('force', opts, user_opts or {})

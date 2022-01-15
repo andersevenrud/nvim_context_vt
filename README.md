@@ -45,10 +45,17 @@ require('nvim_context_vt').setup({
 
   -- Custom node validator callback
   -- Default: nil
-  custom_validator = function(node, ft, targets)
-    -- By default a node is matched against min_rows and targets
-    -- to filter out nodes, but you can override this behaviour here
-    return true
+  custom_validator = function(node, ft)
+    -- Internally a node is matched against min_rows and configured targets
+    local default_validator = require('nvim_context_vt').default_validator
+    if default_validator(node, ft) then
+      -- Custom behaviour after using the internal validator
+      if node:type() == 'function' then
+        return false
+      end
+    end
+
+    return false
   end,
 
 
