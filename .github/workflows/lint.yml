@@ -19,3 +19,4 @@ jobs:
       - uses: Jayrgo/luacheck-action@v1
         with:
           files: '.'
+      - uses: wagoid/commitlint-github-action@v4
