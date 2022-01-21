@@ -65,9 +65,11 @@ local targets = {
     'while',
     'for',
 
-    -- typescript
+    -- typescript/javascript
     'interface_declaration',
     'enum_declaration',
+    'call_expression',
+    'export_statement',
 
     -- lua,
     'local_variable_declaration',
