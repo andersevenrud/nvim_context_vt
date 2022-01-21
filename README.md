@@ -55,7 +55,7 @@ require('nvim_context_vt').setup({
       end
     end
 
-    return false
+    return true
   end,
 
 
