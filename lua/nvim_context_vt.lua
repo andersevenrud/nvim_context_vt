@@ -70,6 +70,7 @@ local targets = {
     'enum_declaration',
     'call_expression',
     'export_statement',
+    'property_signature',
 
     -- lua,
     'local_variable_declaration',
