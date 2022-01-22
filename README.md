@@ -70,8 +70,8 @@ require('nvim_context_vt').setup({
 
 ## Debug
 
-If you don't see the expected context vitual text, run `:lua require 'nvim_context_vt'.show_debug()`
-to print out the context tree. Use this information to open a pull-request or an issue to add support.
+If you don't see the expected context vitual text, run `:NvimContextVtDebug` to print out the
+context tree. Use this information to open a pull-request or an issue to add support.
 
 ## License
 
