@@ -41,7 +41,9 @@ require('nvim_context_vt').setup({
 
   -- Custom virtual text node parser callback
   -- Default: nil
-  custom_parser = function(node, ft, ts_utils)
+  custom_parser = function(node, ft, opts)
+    local ts_utils = require('nvim-treesitter.ts_utils')
+
     -- If you return `nil`, no virtual text will be displayed.
     if node:type() == 'function' then
       return nil
@@ -53,9 +55,9 @@ require('nvim_context_vt').setup({
 
   -- Custom node validator callback
   -- Default: nil
-  custom_validator = function(node, ft)
+  custom_validator = function(node, ft, opts)
     -- Internally a node is matched against min_rows and configured targets
-    local default_validator = require('nvim_context_vt').default_validator
+    local default_validator = require('nvim_context_vt.utils').default_validator
     if default_validator(node, ft) then
       -- Custom behaviour after using the internal validator
       if node:type() == 'function' then
@@ -68,7 +70,7 @@ require('nvim_context_vt').setup({
 
   -- Custom node virtual text resolver callback
   -- Default: nil
-  custom_resolver = function(nodes, ft)
+  custom_resolver = function(nodes, ft, opts)
     -- By default the last node is used
     return nodes[#nodes]
   end,
