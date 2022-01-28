@@ -10,6 +10,8 @@ local opts = {
     custom_resolver = nil,
     highlight = 'ContextVt',
     disable_ft = {},
+    disable_virtual_lines = false,
+    disable_virtual_lines_ft = {},
     prefix = '-->',
 }
 
@@ -33,6 +35,7 @@ local targets = {
 
     'switch_expression',
 
+    'class_definition',
     'class_declaration',
     'struct_expression',
 
@@ -45,6 +48,8 @@ local targets = {
     'foreach_statement',
     'for_statement',
     'for_in_statement',
+
+    'with_statement',
 
     -- rust
     'match_expression',
@@ -93,11 +98,40 @@ local targets = {
     -- cpp
     'case_statement',
     'for_range_loop',
+
+    -- python
+    'list',
+    'pair',
+    'assignment',
+    'decorated_definition',
+
+    -- yaml
+    'block_mapping_pair',
 }
 
 local ignore_root_targets = {
     'program',
     'document',
+}
+
+local line_targets = {
+    'function_definition',
+    'class_definition',
+    'if_statement',
+    'try_statement',
+    'with_statement',
+    'for_statement',
+
+    -- python
+    'decorated_definition',
+
+    -- yaml
+    'block_mapping_pair',
+}
+
+local line_ft = {
+    'python',
+    'yaml',
 }
 
 local function default_parser(node)
@@ -132,6 +166,47 @@ local function find_virtual_text_nodes(validator, ft)
     end
 
     return result
+end
+
+local function create_virtual_text_factory(parser, ft)
+    local is_line_ft = vim.tbl_contains(line_ft, ft)
+    local skip_line_ft = opts.disable_virtual_lines or vim.tbl_contains(opts.disable_virtual_lines_ft, ft)
+
+    local function lines_from_nodes(nodes)
+        local lines = {}
+        for _, n in ipairs(nodes) do
+            local vt = parser(n, ft, ts_utils)
+            if vt then
+                local _, col = n:start()
+                local prefix = string.rep(' ', col)
+                table.insert(lines, { { prefix .. vt, opts.highlight } })
+            end
+        end
+        return lines
+    end
+
+    local function text_from_node(node)
+        local vt = parser(node, ft, ts_utils)
+        if vt then
+            return { virt_text = { { vt, opts.highlight } } }
+        end
+        return nil
+    end
+
+    return function(node, nodes)
+        if is_line_ft and vim.tbl_contains(line_targets, node:type()) then
+            if skip_line_ft then
+                return nil
+            end
+
+            local lines = lines_from_nodes(nodes)
+            if #lines > 0 then
+                return { virt_lines = lines }
+            end
+        end
+
+        return text_from_node(node)
+    end
 end
 
 local M = {
@@ -171,21 +246,21 @@ function M.show_context()
         return
     end
 
-    vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
-
     local validate = opts.custom_validator or default_validator
     local resolve = opts.custom_resolver or default_resolver
     local parse = opts.custom_parser or default_parser
+
+    vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+
     local result = find_virtual_text_nodes(validate, ft)
+    local create_vt = create_virtual_text_factory(parse, ft)
 
     for line, nodes in pairs(result) do
         local node = resolve(nodes, ft)
-        local vt = parse(node, ft, ts_utils)
+        local vt = create_vt(node, nodes)
 
         if vt then
-            vim.api.nvim_buf_set_extmark(0, ns, line, 0, {
-                virt_text = { { vt, opts.highlight } },
-            })
+            vim.api.nvim_buf_set_extmark(0, ns, line, 0, vt)
         end
     end
 end
