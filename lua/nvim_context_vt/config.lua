@@ -62,7 +62,7 @@ M.targets = {
     'class',
     'module',
     'method',
-    'do_block',
+    'call',
     'if',
     'while',
     'for',
