@@ -58,7 +58,7 @@ M.targets = {
     'struct_item',
     'unsafe_block',
 
-    -- ruby target
+    -- ruby
     'class',
     'module',
     'method',
@@ -104,6 +104,10 @@ M.targets = {
 
     -- yaml
     'block_mapping_pair',
+
+    -- css / sass
+    'rule_set',
+    'mixin_statement',
 }
 
 M.ignore_root_targets = {
