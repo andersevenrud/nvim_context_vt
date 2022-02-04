@@ -14,39 +14,43 @@ M.default_opts = {
 
 M.targets = {
     'function',
-    'method_declaration',
-    'function_declaration',
-    'function_definition',
-    'lexical_declaration',
+    'arguments',
+    'case',
+
     'local_function',
     'arrow_function',
-    'method_definition',
-    'arguments',
 
-    'try_statement',
+    'class_definition',
+    'method_definition',
+    'function_definition',
+
+    'method_declaration',
+    'function_declaration',
+    'lexical_declaration',
+    'class_declaration',
+    'interface_declaration',
+    'enum_declaration',
+    'type_declaration',
+
     'catch_clause',
     'finally_clause',
 
-    'if_statement',
     'if_expression',
-
     'switch_expression',
-
-    'class_definition',
-    'class_declaration',
+    'call_expression',
     'struct_expression',
-
     'test_expression',
-
     'while_expression',
-    'while_statement',
-
     'for_expression',
+
+    'try_statement',
+    'if_statement',
+    'while_statement',
     'foreach_statement',
     'for_statement',
     'for_in_statement',
-
     'with_statement',
+    'case_statement',
 
     -- rust
     'match_expression',
@@ -68,18 +72,15 @@ M.targets = {
     'for',
 
     -- typescript/javascript
-    'interface_declaration',
-    'enum_declaration',
-    'call_expression',
     'export_statement',
     'property_signature',
+    'switch_case',
 
     -- lua,
     'local_variable_declaration',
     'variable_declaration',
 
     -- go
-    'type_declaration',
     'type_spec',
     'short_var_declaration',
     'defer_statement',
@@ -93,7 +94,6 @@ M.targets = {
     'default_case',
 
     -- cpp
-    'case_statement',
     'for_range_loop',
 
     -- python
