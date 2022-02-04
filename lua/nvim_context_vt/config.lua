@@ -79,6 +79,7 @@ M.targets = {
     -- lua,
     'local_variable_declaration',
     'variable_declaration',
+    'assignment_statement',
 
     -- go
     'type_spec',
