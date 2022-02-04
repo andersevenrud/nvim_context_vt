@@ -86,7 +86,6 @@ M.targets = {
     'defer_statement',
     'expression_switch_statement',
     'composite_literal',
-    'element',
     'func_literal',
     'go_statement',
     'select_statement',
@@ -116,6 +115,15 @@ M.targets = {
     -- bash
     'case_item',
     'elif_clause',
+
+    -- html / vue / jsx
+    'element',
+    'template_element',
+    'style_element',
+    'script_element',
+    'jsx_element',
+    'jsx_expression',
+    'jsx_fragment',
 }
 
 M.ignore_root_targets = {
