@@ -24,7 +24,7 @@ require('nvim_context_vt').setup({
   highlight = 'CustomContextVt',
 
   -- Disable virtual text for given filetypes
-  -- Default: {}
+  -- Default: { 'markdown' }
   disable_ft = { 'markdown' },
 
   -- Disable display of virtual text below blocks for indentation based languages like Python
