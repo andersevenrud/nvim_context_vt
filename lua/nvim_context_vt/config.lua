@@ -112,6 +112,10 @@ M.targets = {
     -- vala
     'class_constructor_definition',
     'class_destructor',
+
+    -- bash
+    'case_item',
+    'elif_clause',
 }
 
 M.ignore_root_targets = {
