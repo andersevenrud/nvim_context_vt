@@ -108,6 +108,10 @@ M.targets = {
     -- css / sass
     'rule_set',
     'mixin_statement',
+
+    -- vala
+    'class_constructor_definition',
+    'class_destructor',
 }
 
 M.ignore_root_targets = {
