@@ -2,6 +2,7 @@ local M = {}
 
 M.default_opts = {
     min_rows = 1,
+    min_rows_ft = {},
     custom_parser = nil,
     custom_validator = nil,
     custom_resolver = nil,
