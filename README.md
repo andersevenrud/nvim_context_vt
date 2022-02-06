@@ -39,6 +39,10 @@ require('nvim_context_vt').setup({
   -- Default: 1 (equals two lines total)
   min_rows = 1,
 
+  -- Same as above but only for spesific filetypes
+  -- Default: {}
+  min_rows_ft = {},
+
   -- Custom virtual text node parser callback
   -- Default: nil
   custom_parser = function(node, ft, opts)

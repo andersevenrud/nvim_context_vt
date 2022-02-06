@@ -6,9 +6,10 @@ M.default_parser = function(node, _, opts)
     return opts.prefix .. ' ' .. ts_utils.get_node_text(node, 0)[1]
 end
 
-M.default_validator = function(node, _, opts)
+M.default_validator = function(node, ft, opts)
+    local min_rows = opts.min_rows_ft[ft] or opts.min_rows
     if vim.tbl_contains(config.targets, node:type()) then
-        return node:end_() > node:start() + opts.min_rows
+        return node:end_() > node:start() + min_rows
     end
     return false
 end
