@@ -126,6 +126,10 @@ M.targets = {
     'jsx_element',
     'jsx_expression',
     'jsx_fragment',
+
+    -- commonlisp
+    'list_lit',
+    'defun',
 }
 
 M.ignore_root_targets = {
