@@ -8,8 +8,9 @@ CONTENTS                                                *nvim_context_vt-content
 1. nvim_context_vt...............................................|nvim_context_vt|
     1.1. How to install..................................|nvim_context_vt-install|
     1.2. Advanced usage.................................|nvim_context_vt-advanced|
-    1.3. Debug.............................................|nvim_context_vt-debug|
-    1.4. License.........................................|nvim_context_vt-license|
+    1.3. Commands.......................................|nvim_context_vt-commands|
+    1.4. Debug.............................................|nvim_context_vt-debug|
+    1.5. License.........................................|nvim_context_vt-license|
 
 --------------------------------------------------------------------------------
 HOW TO INSTALL                                           *nvim_context_vt-install*
@@ -86,6 +87,11 @@ To customize the behavior use the setup function:
       end,
     })
 <
+
+--------------------------------------------------------------------------------
+COMMANDS                                                *nvim_context_vt-commands*
+
+* `:NvimContextVtToggle` - Enable/disable context virtual text
 
 --------------------------------------------------------------------------------
 DEBUG                                                      *nvim_context_vt-debug*
