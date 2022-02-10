@@ -81,6 +81,10 @@ require('nvim_context_vt').setup({
 })
 ```
 
+## Commands
+
+* `:NvimContextVtToggle` - Enable/disable context virtual text
+
 ## Debug
 
 If you don't see the expected context vitual text, run `:NvimContextVtDebug` to print out the
