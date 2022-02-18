@@ -52,6 +52,7 @@ M.targets = {
     'for_in_statement',
     'with_statement',
     'case_statement',
+    'switch_statement',
 
     -- rust
     'match_expression',
