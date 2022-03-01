@@ -1,6 +1,7 @@
 local M = {}
 
 M.default_opts = {
+    enabled = true,
     min_rows = 1,
     min_rows_ft = {},
     custom_parser = nil,
