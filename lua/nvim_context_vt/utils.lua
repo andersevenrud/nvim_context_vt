@@ -4,25 +4,24 @@ local M = {}
 
 -- This is from nvim-treesitter
 function M.get_node_text(node, bufnr)
-  local bufnr = bufnr or vim.api.nvim_get_current_buf()
-  if not node then
-    return {}
-  end
-
-  local start_row, start_col, end_row, end_col = ts_utils.get_node_range(node)
-  if start_row ~= end_row then
-    local lines = vim.api.nvim_buf_get_lines(bufnr, start_row, end_row + 1, false)
-    lines[1] = string.sub(lines[1], start_col + 1)
-    if #lines == end_row - start_row + 1 then
-      lines[#lines] = string.sub(lines[#lines], 1, end_col)
+    local bufnr = bufnr or vim.api.nvim_get_current_buf()
+    if not node then
+        return {}
     end
-    return lines
-  else
-    local line = vim.api.nvim_buf_get_lines(bufnr, start_row, start_row + 1, false)[1]
-    return line and { string.sub(line, start_col + 1, end_col) } or {}
-  end
-end
 
+    local start_row, start_col, end_row, end_col = ts_utils.get_node_range(node)
+    if start_row ~= end_row then
+        local lines = vim.api.nvim_buf_get_lines(bufnr, start_row, end_row + 1, false)
+        lines[1] = string.sub(lines[1], start_col + 1)
+        if #lines == end_row - start_row + 1 then
+            lines[#lines] = string.sub(lines[#lines], 1, end_col)
+        end
+        return lines
+    else
+        local line = vim.api.nvim_buf_get_lines(bufnr, start_row, start_row + 1, false)[1]
+        return line and { string.sub(line, start_col + 1, end_col) } or {}
+    end
+end
 
 M.default_parser = function(node, _, opts)
     return opts.prefix .. ' ' .. M.get_node_text(node, 0)[1]
