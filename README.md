@@ -50,7 +50,7 @@ require('nvim_context_vt').setup({
   -- Custom virtual text node parser callback
   -- Default: nil
   custom_parser = function(node, ft, opts)
-    local ts_utils = require('nvim-treesitter.ts_utils')
+    local utils = require('nvim_context_vt.utils')
 
     -- If you return `nil`, no virtual text will be displayed.
     if node:type() == 'function' then
@@ -58,7 +58,7 @@ require('nvim_context_vt').setup({
     end
 
     -- This is the standard text
-    return '--> ' .. ts_utils.get_node_text(node)[1]
+    return '--> ' .. utils.get_node_text(node)[1]
   end,
 
   -- Custom node validator callback
