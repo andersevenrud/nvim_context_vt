@@ -4,7 +4,7 @@ local M = {}
 
 -- This is from nvim-treesitter
 function M.get_node_text(node, bufnr)
-    local bufnr = bufnr or vim.api.nvim_get_current_buf()
+    bufnr = bufnr or vim.api.nvim_get_current_buf()
     if not node then
         return {}
     end
