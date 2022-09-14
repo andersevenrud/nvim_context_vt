@@ -132,6 +132,12 @@ M.targets = {
     -- commonlisp
     'list_lit',
     'defun',
+
+    -- elixir
+    'anonymous_function',
+    'do_block',
+    'tuple',
+    'map',
 }
 
 M.ignore_root_targets = {
