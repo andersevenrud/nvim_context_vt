@@ -78,7 +78,7 @@ M.create_virtual_text_factory = function(parser, ft, opts)
     local function text_from_node(node)
         local vt = parser(node, ft, opts)
         if vt then
-            return { virt_text = { { vt, opts.highlight } } }
+            return { virt_text = { { vt, opts.highlight } }, hl_mode = 'combine' }
         end
         return nil
     end
@@ -91,7 +91,7 @@ M.create_virtual_text_factory = function(parser, ft, opts)
 
             local lines = lines_from_nodes(nodes)
             if #lines > 0 then
-                return { virt_lines = lines }
+                return { virt_lines = lines, hl_mode = 'combine' }
             end
         end
 
