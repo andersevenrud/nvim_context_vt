@@ -1,0 +1,16 @@
+name: Luacheck
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: Jayrgo/luacheck-action@v1
+        with:
+          files: '.'
