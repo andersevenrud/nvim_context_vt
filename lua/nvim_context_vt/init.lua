@@ -33,7 +33,9 @@ function M.show_debug()
         return true
     end, ft, opts)
 
+    ---@type TSNode[][]
     local values = vim.tbl_values(result)
+    ---@type number[]
     local lines = vim.tbl_keys(result)
 
     for index, nodes in ipairs(values) do
