@@ -51,7 +51,10 @@ end
 ---@return table<number, table<number, TSNode>>
 M.find_virtual_text_nodes = function(validator, ft, opts)
     local result = {} ---@type table<number, table<number, TSNode>>
-    local node = vim.treesitter.get_node()
+    local ok, node = pcall(vim.treesitter.get_node)
+    if not ok then
+        return result
+    end
 
     while node ~= nil and not vim.tbl_contains(config.ignore_root_targets, node:type()) do
         if validator(node, ft, opts) then
