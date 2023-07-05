@@ -1,4 +1,3 @@
-local ts_utils = require('nvim-treesitter.ts_utils')
 local config = require('nvim_context_vt.config')
 local M = {}
 
@@ -41,7 +40,7 @@ end
 
 M.find_virtual_text_nodes = function(validator, ft, opts)
     local result = {}
-    local node = ts_utils.get_node_at_cursor()
+    local node = vim.treesitter.get_node()
 
     while node ~= nil and not vim.tbl_contains(config.ignore_root_targets, node:type()) do
         if validator(node, ft, opts) then
