@@ -26,7 +26,12 @@ M.default_parser = function(node, _, opts)
     return opts.prefix .. ' ' .. M.get_node_text(node, 0)[1]
 end
 
+---@param node TSNode
+---@param ft string
+---@param opts table
+---@return boolean
 M.default_validator = function(node, ft, opts)
+    ---@type integer
     local min_rows = opts.min_rows_ft[ft] or opts.min_rows
     if vim.tbl_contains(config.targets, node:type()) then
         return node:end_() > node:start() + min_rows
@@ -34,12 +39,18 @@ M.default_validator = function(node, ft, opts)
     return false
 end
 
+---@param nodes TSNode[]
+---@return TSNode
 M.default_resolver = function(nodes)
     return nodes[#nodes]
 end
 
+---@param validator fun(node: TSNode, ft: string, opts: table): boolean
+---@param ft string
+---@param opts table
+---@return table<number, table<number, TSNode>>
 M.find_virtual_text_nodes = function(validator, ft, opts)
-    local result = {}
+    local result = {} ---@type table<number, table<number, TSNode>>
     local node = vim.treesitter.get_node()
 
     while node ~= nil and not vim.tbl_contains(config.ignore_root_targets, node:type()) do
@@ -57,10 +68,16 @@ M.find_virtual_text_nodes = function(validator, ft, opts)
     return result
 end
 
+---@param parser fun(node: TSNode, ft: string, opts: table): string
+---@param ft string
+---@param opts table
+---@return fun(node: TSNode, nodes: TSNode[]): table?
 M.create_virtual_text_factory = function(parser, ft, opts)
     local is_line_ft = vim.tbl_contains(config.line_ft, ft)
     local skip_line_ft = opts.disable_virtual_lines or vim.tbl_contains(opts.disable_virtual_lines_ft, ft)
 
+    ---@param nodes TSNode[]
+    ---@return table
     local function lines_from_nodes(nodes)
         local lines = {}
         for _, n in ipairs(nodes) do
@@ -74,6 +91,8 @@ M.create_virtual_text_factory = function(parser, ft, opts)
         return lines
     end
 
+    ---@param node TSNode
+    ---@return table?
     local function text_from_node(node)
         local vt = parser(node, ft, opts)
         if vt then
