@@ -33,6 +33,7 @@ M.targets = {
     'interface_declaration',
     'enum_declaration',
     'type_declaration',
+    'field_declaration',
 
     'catch_clause',
     'finally_clause',
@@ -95,6 +96,7 @@ M.targets = {
     'select_statement',
     'communication_case',
     'default_case',
+    'struct_type',
 
     -- cpp
     'for_range_loop',
