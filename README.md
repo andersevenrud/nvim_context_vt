@@ -58,7 +58,7 @@ require('nvim_context_vt').setup({
     end
 
     -- This is the standard text
-    return '--> ' .. utils.get_node_text(node)[1]
+    return opts.prefix .. ' ' .. utils.get_node_text(node)[1]
   end,
 
   -- Custom node validator callback
