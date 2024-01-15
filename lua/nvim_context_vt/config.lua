@@ -155,6 +155,9 @@ M.line_targets = {
     'with_statement',
     'for_statement',
 
+    -- haskell
+    'function',
+
     -- python
     'decorated_definition',
 
@@ -163,6 +166,7 @@ M.line_targets = {
 }
 
 M.line_ft = {
+    'haskell',
     'python',
     'yaml',
 }
