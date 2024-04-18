@@ -84,6 +84,7 @@ M.targets = {
     'local_variable_declaration',
     'variable_declaration',
     'assignment_statement',
+    'field',
 
     -- go
     'type_spec',
