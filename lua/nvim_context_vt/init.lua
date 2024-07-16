@@ -51,7 +51,7 @@ end
 function M.toggle_context()
     if opts.enabled then
         opts.enabled = false
-        vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+        M.hide_context()
     else
         opts.enabled = true
         M.show_context()
@@ -81,6 +81,10 @@ function M.show_context()
             vim.api.nvim_buf_set_extmark(0, ns, line, 0, vt)
         end
     end
+end
+
+function M.hide_context()
+    vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
 end
 
 return M
