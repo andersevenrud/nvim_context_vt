@@ -65,7 +65,13 @@ M.find_virtual_text_nodes = function(validator, ft, opts)
             table.insert(result[target_line], node)
         end
 
-        node = node:parent()
+        local pnode = node:parent()
+        if pnode == node then
+            -- in case of dead loop
+            break
+        else
+            node = pnode
+        end
     end
 
     return result
