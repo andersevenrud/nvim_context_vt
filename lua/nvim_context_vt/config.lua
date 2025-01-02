@@ -84,7 +84,7 @@ M.targets = {
     'local_variable_declaration',
     'variable_declaration',
     'assignment_statement',
-    'field',
+    'function_call',
     'expression_list',
 
     -- go
