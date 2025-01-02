@@ -86,6 +86,7 @@ M.targets = {
     'assignment_statement',
     'function_call',
     'expression_list',
+    'field',
 
     -- go
     'type_spec',
