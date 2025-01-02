@@ -85,6 +85,7 @@ M.targets = {
     'variable_declaration',
     'assignment_statement',
     'field',
+    'expression_list',
 
     -- go
     'type_spec',
