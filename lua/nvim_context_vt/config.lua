@@ -12,6 +12,7 @@ M.default_opts = {
     disable_virtual_lines = false,
     disable_virtual_lines_ft = {},
     prefix = '-->',
+    priority = 1000,
 }
 
 M.targets = {
