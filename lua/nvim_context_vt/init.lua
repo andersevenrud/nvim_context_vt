@@ -78,6 +78,7 @@ function M.show_context()
         local vt = create_vt(node, nodes)
 
         if vt then
+            vt.priority = opts.priority
             vim.api.nvim_buf_set_extmark(0, ns, line, 0, vt)
         end
     end
