@@ -23,6 +23,10 @@ require('nvim_context_vt').setup({
   -- Default: '-->'
   prefix = '',
 
+  -- Override default virtual text priority
+  -- Default: 1000
+  priority = 1000,
+
   -- Override the internal highlight group name
   -- Default: 'ContextVt'
   highlight = 'CustomContextVt',
