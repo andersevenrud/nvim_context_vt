@@ -144,6 +144,10 @@ M.targets = {
     'do_block',
     'tuple',
     'map',
+
+    -- qml
+    'ui_object_definition',
+    'ui_binding',
 }
 
 M.ignore_root_targets = {
