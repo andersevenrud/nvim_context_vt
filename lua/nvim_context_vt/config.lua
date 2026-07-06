@@ -105,6 +105,7 @@ M.targets = {
     -- cpp
     'for_range_loop',
     'preproc_ifdef',
+    'namespace_definition',
 
     -- python
     'list',
