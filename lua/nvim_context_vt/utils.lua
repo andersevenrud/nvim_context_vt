@@ -88,6 +88,60 @@ M.find_virtual_text_nodes = function(validator, ft, opts)
     return result
 end
 
+--- Same as `find_virtual_text_nodes`, except it looks at every node currently
+--- visible in the window instead of only the ancestors of the node under the cursor.
+---@param validator fun(node: TSNode, ft: string, opts: table): boolean
+---@param ft string
+---@param opts table
+---@return table<number, table<number, TSNode>>
+M.find_all_virtual_text_nodes = function(validator, ft, opts)
+    local result = {} ---@type table<number, table<number, TSNode>>
+    local ok, parser = pcall(vim.treesitter.get_parser, 0)
+    if not ok or not parser then
+        return result
+    end
+
+    -- Anything outside of the window is not rendered anyway
+    local first_line = vim.fn.line('w0') - 1
+    local last_line = vim.fn.line('w$') - 1
+
+    ---@param node TSNode
+    local function traverse(node)
+        local start_line, _, end_line, _ = node:range()
+        if start_line > last_line or end_line < first_line then
+            return
+        end
+
+        -- Children are visited first so that the resolver is given the same
+        -- ordering as when walking up from the node under the cursor
+        for index = 0, node:named_child_count() - 1 do
+            local child = node:named_child(index)
+            if child:start() > last_line then
+                break
+            end
+            traverse(child)
+        end
+
+        if end_line > last_line or vim.tbl_contains(config.ignore_root_targets, node:type()) then
+            return
+        end
+
+        if validator(node, ft, opts) then
+            if not result[end_line] then
+                result[end_line] = {}
+            end
+            table.insert(result[end_line], node)
+        end
+    end
+
+    pcall(parser.parse, parser, { first_line, last_line + 1 })
+    parser:for_each_tree(function(tree)
+        traverse(tree:root())
+    end)
+
+    return result
+end
+
 ---@param parser fun(node: TSNode, ft: string, opts: table): string
 ---@param ft string
 ---@param opts table

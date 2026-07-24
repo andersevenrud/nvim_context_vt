@@ -28,6 +28,11 @@ To customize the behavior use the setup function:
       -- Default: true
       enabled = true,
 
+      -- Show virtual text for every context visible in the window instead of
+      -- only the ones surrounding the cursor position
+      -- Default: false
+      show_all_contexts = false,
+
       -- Override default virtual text prefix
       -- Default: '-->'
       prefix = '',
@@ -108,6 +113,7 @@ To customize the behavior use the setup function:
 COMMANDS                                                *nvim_context_vt-commands*
 
 * `:NvimContextVtToggle` - Enable/disable context virtual text
+* `:NvimContextVtToggleAllContexts` - Toggle the `show_all_contexts` option
 
 --------------------------------------------------------------------------------
 DEBUG                                                      *nvim_context_vt-debug*

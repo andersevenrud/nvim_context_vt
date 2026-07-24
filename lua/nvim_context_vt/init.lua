@@ -5,8 +5,48 @@ local M = {}
 local ns = vim.api.nvim_create_namespace('context_vt')
 local opts = config.default_opts
 
+--- What the last `show_all_contexts` render was made from. A single slot is
+--- enough for the case that matters, and leaves nothing to invalidate when a
+--- buffer goes away.
+local last_render = {}
+
+--- Whether the visible contexts are already on screen.
+---
+--- Unlike the context around the cursor, they only depend on the contents of
+--- the buffer and the part of it the window shows, so moving the cursor around
+--- cannot change them. Without this every keystroke would walk the whole
+--- visible tree again.
+---@return boolean
+local function already_rendered()
+    local buf = vim.api.nvim_get_current_buf()
+    local win = vim.api.nvim_get_current_win()
+    local tick = vim.b.changedtick
+    local first = vim.fn.line('w0')
+    local last = vim.fn.line('w$')
+
+    if
+        last_render.buf == buf
+        and last_render.win == win
+        and last_render.tick == tick
+        and last_render.first == first
+        and last_render.last == last
+    then
+        return true
+    end
+
+    last_render = { buf = buf, win = win, tick = tick, first = first, last = last }
+
+    return false
+end
+
+--- Forces the next render to happen even if nothing appears to have changed
+local function invalidate_render()
+    last_render = {}
+end
+
 function M.setup(user_opts)
     opts = vim.tbl_extend('force', config.default_opts, user_opts or {})
+    invalidate_render()
 end
 
 function M.ft_to_lang(ft)
@@ -58,9 +98,21 @@ function M.toggle_context()
     end
 end
 
+function M.toggle_all_contexts()
+    opts.show_all_contexts = not opts.show_all_contexts
+    invalidate_render()
+    if opts.enabled then
+        M.show_context()
+    end
+end
+
 function M.show_context()
     local ft = M.get_buf_lang()
     if not opts.enabled or vim.tbl_contains(opts.disable_ft, ft) then
+        return
+    end
+
+    if opts.show_all_contexts and already_rendered() then
         return
     end
 
@@ -70,7 +122,8 @@ function M.show_context()
 
     vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
 
-    local result = utils.find_virtual_text_nodes(validate, ft, opts)
+    local find = opts.show_all_contexts and utils.find_all_virtual_text_nodes or utils.find_virtual_text_nodes
+    local result = find(validate, ft, opts)
     local create_vt = utils.create_virtual_text_factory(parse, ft, opts)
 
     for line, nodes in pairs(result) do
@@ -84,7 +137,16 @@ function M.show_context()
     end
 end
 
+--- Refreshes the virtual text for events that only matter when
+--- rendering contexts outside of the cursor position
+function M.refresh_context()
+    if opts.show_all_contexts then
+        M.show_context()
+    end
+end
+
 function M.hide_context()
+    invalidate_render()
     vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
 end
 
