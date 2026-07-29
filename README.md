@@ -2,7 +2,7 @@
 
 Shows virtual text of the current context after functions, methods, statements, etc.
 
-![nvim_context_vt](https://user-images.githubusercontent.com/866743/128077347-051430c4-2c89-4161-aa48-5a5793ec8499.gif)
+![nvim_context_vt](https://github.com/user-attachments/assets/e2c5d1ed-a4a4-4556-8d49-8a1cf2ed4f8b)
 
 ## How to install
 
