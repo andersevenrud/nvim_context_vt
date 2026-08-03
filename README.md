@@ -43,6 +43,15 @@ require('nvim_context_vt').setup({
   -- Default: {}
   disable_virtual_lines_ft = { 'yaml' },
 
+  -- Never show virtual text for these node types
+  -- Default: {}
+  disable_targets = { 'call' },
+
+  -- Same as above but only for spesific filetypes
+  -- Adds to the list above instead of replacing it
+  -- Default: {}
+  disable_targets_ft = { python = { 'if_statement' } },
+
   -- How many lines required after starting position to show virtual text
   -- Default: 1 (equals two lines total)
   min_rows = 1,
@@ -68,16 +77,15 @@ require('nvim_context_vt').setup({
   -- Custom node validator callback
   -- Default: nil
   custom_validator = function(node, ft, opts)
-    -- Internally a node is matched against min_rows and configured targets
+    -- Internally a node is matched against min_rows, the configured targets
+    -- and the disabled targets
     local default_validator = require('nvim_context_vt.utils').default_validator
-    if default_validator(node, ft) then
-      -- Custom behaviour after using the internal validator
-      if node:type() == 'function' then
-        return false
-      end
+    if not default_validator(node, ft, opts) then
+      return false
     end
 
-    return true
+    -- Custom behaviour after using the internal validator
+    return node:type() ~= 'function'
   end,
 
   -- Custom node virtual text resolver callback

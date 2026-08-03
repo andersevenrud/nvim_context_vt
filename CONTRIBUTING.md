@@ -39,4 +39,8 @@ Use the command `:NvimContextVtDebug` to show the context for the current line t
 * `line_targets`: valid node targets used for line targets and not inline
 * `line_ft`: filetypes that should use `line_targets`
 
+Note that the node type names printed by `:NvimContextVtDebug` are also what the `disable_targets` and
+`disable_targets_ft` setup options take, so removing a target from `targets` is only appropriate when it
+never made sense for anyone, not as a matter of personal preference.
+
 Commit the changes with the message `feat: support X` or `feat: improve Y`, etc. into your fork and open a pull-request.

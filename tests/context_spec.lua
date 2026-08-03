@@ -99,6 +99,78 @@ t.test('min_rows_ft overrides min_rows for one filetype', function()
     t.eq({ '--> if (argc > 1) {', '--> int main(int argc, char **argv)' }, other)
 end)
 
+t.test('disable_targets removes only the node types it names', function()
+    local inline = t.context({
+        lines = LUA,
+        filetype = 'lua',
+        cursor = CURSOR,
+        opts = { disable_targets = { 'if_statement' } },
+    })
+
+    t.eq({ '--> for _, item in ipairs(items) do', '--> function M.run(items)' }, inline)
+end)
+
+t.test('disable_targets_ft only applies to its own language', function()
+    local opts = { disable_targets_ft = { lua = { 'if_statement' } } }
+    local inline = t.context({ lines = LUA, filetype = 'lua', cursor = CURSOR, opts = opts })
+
+    t.eq({ '--> for _, item in ipairs(items) do', '--> function M.run(items)' }, inline)
+
+    local other = t.context({ lines = C, filetype = 'c', cursor = { 4, 8 }, opts = opts })
+
+    t.eq({ '--> if (argc > 1) {', '--> int main(int argc, char **argv)' }, other)
+end)
+
+t.test('disable_targets_ft adds to disable_targets instead of replacing it', function()
+    local inline = t.context({
+        lines = LUA,
+        filetype = 'lua',
+        cursor = CURSOR,
+        opts = {
+            disable_targets = { 'for_statement' },
+            disable_targets_ft = { lua = { 'if_statement' } },
+        },
+    })
+
+    t.eq({ '--> function M.run(items)' }, inline)
+end)
+
+t.test('a custom_validator takes over disable_targets as well', function()
+    local opts = {
+        disable_targets = { 'if_statement' },
+        custom_validator = function(node)
+            return node:type() == 'if_statement' or node:type() == 'for_statement'
+        end,
+    }
+
+    -- Replacing the validator replaces everything it does, the same way it
+    -- already replaces min_rows and the configured targets
+    local inline = t.context({ lines = LUA, filetype = 'lua', cursor = CURSOR, opts = opts })
+
+    t.eq({ '--> for _, item in ipairs(items) do', '--> if item.done then' }, inline)
+
+    -- Calling the default validator from a custom one brings it back
+    opts.custom_validator = function(node, ft, node_opts)
+        return utils.default_validator(node, ft, node_opts)
+    end
+
+    local composed = t.context({ lines = LUA, filetype = 'lua', cursor = CURSOR, opts = opts })
+
+    t.eq({ '--> for _, item in ipairs(items) do', '--> function M.run(items)' }, composed)
+end)
+
+t.test('disable_targets does not hide anything from the debug output', function()
+    -- The debug command is how the node type names are found in the first
+    -- place, so filtering it would make the option impossible to configure
+    nvim_context_vt.setup({ disable_targets = { 'if_statement' } })
+    t.buffer(LUA, 'lua')
+    vim.api.nvim_win_set_cursor(0, CURSOR)
+
+    local output = vim.api.nvim_exec2('NvimContextVtDebug', { output = true }).output
+
+    t.eq(true, output:find('if_statement --> if item.done then', 1, true) ~= nil)
+end)
+
 t.test('renders nothing for a disabled filetype', function()
     local lines = { '# Title', '', 'Some paragraph', 'across two lines', '' }
     local inline = t.context({ lines = lines, filetype = 'markdown', cursor = { 4, 0 } })

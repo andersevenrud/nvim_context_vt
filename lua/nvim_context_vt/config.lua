@@ -11,6 +11,8 @@ M.default_opts = {
     disable_ft = { 'markdown' },
     disable_virtual_lines = false,
     disable_virtual_lines_ft = {},
+    disable_targets = {},
+    disable_targets_ft = {},
     prefix = '-->',
     priority = 1000,
 }
