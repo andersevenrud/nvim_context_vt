@@ -11,6 +11,19 @@ to check the code for potential errors and styling issues.
 It is adviced to install these utilities and check your code before submission. Most modern IDEs and editors have some
 way of alerting you with diagnostics using the provided configurations.
 
+## Tests
+
+Run the test suite from the repository root:
+
+```sh
+nvim --clean --headless -l tests/run.lua
+```
+
+The `--clean` flag makes the run ignore your own configuration and plugins, so it behaves the same locally as
+it does in CI. There is nothing to install: the suite only uses the treesitter parsers bundled with Neovim,
+which is why every fixture is written in lua, c or markdown. Please keep it that way, and add a case to
+`tests/context_spec.lua` when changing how nodes are resolved or rendered.
+
 ## Commit messages
 
 This project uses the [conventional commits](https://conventionalcommits.org/) specification for git commit messages.
