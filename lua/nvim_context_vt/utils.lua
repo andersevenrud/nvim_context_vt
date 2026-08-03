@@ -31,7 +31,7 @@ function M.get_node_text(node, bufnr)
     end
 end
 
-M.default_parser = function(node, _, opts)
+function M.default_parser(node, _, opts)
     return opts.prefix .. ' ' .. M.get_node_text(node, 0)[1]
 end
 
@@ -39,7 +39,7 @@ end
 ---@param ft string
 ---@param opts table
 ---@return boolean
-M.default_validator = function(node, ft, opts)
+function M.default_validator(node, ft, opts)
     ---@type integer
     local min_rows = opts.min_rows_ft[ft] or opts.min_rows
     local node_type = node:type()
@@ -61,7 +61,7 @@ end
 
 ---@param nodes TSNode[]
 ---@return TSNode
-M.default_resolver = function(nodes)
+function M.default_resolver(nodes)
     return nodes[#nodes]
 end
 
@@ -69,7 +69,7 @@ end
 ---@param ft string
 ---@param opts table
 ---@return table<number, table<number, TSNode>>
-M.find_virtual_text_nodes = function(validator, ft, opts)
+function M.find_virtual_text_nodes(validator, ft, opts)
     local result = {} ---@type table<number, table<number, TSNode>>
     local ok, node = pcall(vim.treesitter.get_node)
     if not ok then
@@ -101,7 +101,7 @@ end
 ---@param ft string
 ---@param opts table
 ---@return fun(node: TSNode, nodes: TSNode[]): table?
-M.create_virtual_text_factory = function(parser, ft, opts)
+function M.create_virtual_text_factory(parser, ft, opts)
     local is_line_ft = vim.tbl_contains(config.line_ft, ft)
     local skip_line_ft = opts.disable_virtual_lines or vim.tbl_contains(opts.disable_virtual_lines_ft, ft)
 
