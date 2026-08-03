@@ -1,5 +1,4 @@
 -- Unit tests for the helpers that do not need any virtual text rendered
-local nvim_context_vt = require('nvim_context_vt')
 local utils = require('nvim_context_vt.utils')
 local t = require('tests.harness')
 
@@ -35,9 +34,9 @@ end)
 
 t.test('get_buf_lang maps a filetype to its language', function()
     t.buffer({ '' }, 'markdown')
-    t.eq('markdown', nvim_context_vt.get_buf_lang())
+    t.eq('markdown', utils.get_buf_lang())
 
-    t.eq('c', nvim_context_vt.ft_to_lang('c'))
+    t.eq('c', utils.ft_to_lang('c'))
     -- Dotted filetypes fall back to the part before the first dot
-    t.eq('c', nvim_context_vt.ft_to_lang('c.doxygen'))
+    t.eq('c', utils.ft_to_lang('c.doxygen'))
 end)

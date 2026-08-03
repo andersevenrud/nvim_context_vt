@@ -9,26 +9,8 @@ function M.setup(user_opts)
     opts = vim.tbl_extend('force', config.default_opts, user_opts or {})
 end
 
-function M.ft_to_lang(ft)
-    local result = vim.treesitter.language.get_lang(ft)
-    if result then
-        return result
-    else
-        ft = vim.split(ft, '.', { plain = true })[1]
-        return vim.treesitter.language.get_lang(ft) or ft
-    end
-end
-
---- Gets the language of a given buffer
----@param bufnr number? or current buffer
----@return string
-function M.get_buf_lang(bufnr)
-    bufnr = bufnr or vim.api.nvim_get_current_buf()
-    return M.ft_to_lang(vim.api.nvim_buf_get_option(bufnr, 'ft'))
-end
-
 function M.show_debug()
-    local ft = M.get_buf_lang()
+    local ft = utils.get_buf_lang()
     local result = utils.find_virtual_text_nodes(function()
         return true
     end, ft, opts)
@@ -59,7 +41,7 @@ function M.toggle_context()
 end
 
 function M.show_context()
-    local ft = M.get_buf_lang()
+    local ft = utils.get_buf_lang()
     if not opts.enabled or vim.tbl_contains(opts.disable_ft, ft) then
         return
     end
