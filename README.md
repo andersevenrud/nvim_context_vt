@@ -8,7 +8,7 @@ Shows virtual text of the current context after functions, methods, statements, 
 
 Use your favourite package manager. No configuration is required out of the box.
 
-Requires treesitter to be enabled for the buffers you use it in.
+Requires Neovim 0.11+ and treesitter enabled for the buffers you use it in.
 
 ## Advanced usage
 

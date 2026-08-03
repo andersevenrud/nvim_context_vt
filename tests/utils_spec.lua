@@ -36,7 +36,15 @@ t.test('get_buf_lang maps a filetype to its language', function()
     t.buffer({ '' }, 'markdown')
     t.eq('markdown', utils.get_buf_lang())
 
-    t.eq('c', utils.ft_to_lang('c'))
     -- Dotted filetypes fall back to the part before the first dot
-    t.eq('c', utils.ft_to_lang('c.doxygen'))
+    t.buffer({ '' }, 'c.doxygen')
+    t.eq('c', utils.get_buf_lang())
+
+    -- A filetype with no language registered for it is used as is
+    t.buffer({ '' }, 'totally_unknown')
+    t.eq('totally_unknown', utils.get_buf_lang())
+
+    -- And a buffer without a filetype has no language at all
+    t.buffer({ '' }, '')
+    t.eq('', utils.get_buf_lang())
 end)
