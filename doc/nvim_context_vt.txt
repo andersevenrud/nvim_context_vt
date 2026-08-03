@@ -15,8 +15,9 @@ CONTENTS                                                *nvim_context_vt-content
 --------------------------------------------------------------------------------
 HOW TO INSTALL                                           *nvim_context_vt-install*
 
-Use your favourite package manager and install treesitter (https://github.com/nvim-treesitter/nvim-treesitter)
-alongside this plugin. No configuration is required out of the box.
+Use your favourite package manager. No configuration is required out of the box.
+
+Requires treesitter to be enabled for the buffers you use it in.
 
 --------------------------------------------------------------------------------
 ADVANCED USAGE                                          *nvim_context_vt-advanced*

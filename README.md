@@ -6,8 +6,9 @@ Shows virtual text of the current context after functions, methods, statements, 
 
 ## How to install
 
-Use your favourite package manager and install [treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-alongside this plugin. No configuration is required out of the box.
+Use your favourite package manager. No configuration is required out of the box.
+
+Requires treesitter to be enabled for the buffers you use it in.
 
 ## Advanced usage
 
