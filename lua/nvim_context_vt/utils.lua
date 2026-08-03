@@ -33,9 +33,20 @@ end
 M.default_validator = function(node, ft, opts)
     ---@type integer
     local min_rows = opts.min_rows_ft[ft] or opts.min_rows
-    if vim.tbl_contains(config.targets, node:type()) then
+    local node_type = node:type()
+
+    if vim.tbl_contains(opts.disable_targets, node_type) then
+        return false
+    end
+
+    if vim.tbl_contains(opts.disable_targets_ft[ft] or {}, node_type) then
+        return false
+    end
+
+    if vim.tbl_contains(config.targets, node_type) then
         return node:end_() > node:start() + min_rows
     end
+
     return false
 end
 
