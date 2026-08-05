@@ -2,6 +2,7 @@ local M = {}
 
 M.default_opts = {
     enabled = true,
+    show_all_contexts = false,
     min_rows = 1,
     min_rows_ft = {},
     custom_parser = nil,

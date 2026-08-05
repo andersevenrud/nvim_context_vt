@@ -20,6 +20,11 @@ require('nvim_context_vt').setup({
   -- Default: true
   enabled = true,
 
+  -- Show virtual text for every context visible in the window instead of only
+  -- the ones surrounding the cursor position
+  -- Default: false
+  show_all_contexts = false,
+
   -- Override default virtual text prefix
   -- Default: '-->'
   prefix = '',
@@ -101,6 +106,7 @@ require('nvim_context_vt').setup({
 ## Commands
 
 * `:NvimContextVtToggle` - Enable/disable context virtual text
+* `:NvimContextVtToggleAllContexts` - Toggle the `show_all_contexts` option
 
 ## Debug
 
